@@ -5,3 +5,7 @@ elixir:
 
 otp_release:
   - 20.0
+
+script:
+  - mix dialyzer
+  - mix credo
