@@ -11,7 +11,7 @@ defmodule QUIC.Connection do
     :binary,
     active: 10,
     add_membership: {{127, 0, 0, 1}, {0, 0, 0, 0}},
-    multicast_if: {0, 0, 0,0}
+    multicast_if: {0, 0, 0, 0}
   ]
 
   @typedoc """
