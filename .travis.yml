@@ -8,4 +8,4 @@ otp_release:
 
 script:
   - mix dialyzer
-  - mix credo
+  - mix credo --strict
