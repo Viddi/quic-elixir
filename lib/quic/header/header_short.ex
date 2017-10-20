@@ -43,4 +43,33 @@ defmodule QUIC.Header.Short do
 
   @enforce_keys [:c, :k, :type, :packet_number, :payload]
   defstruct [:c, :k, :type, :connection_id, :packet_number, :payload]
+
+  defmodule Type do
+    @moduledoc """
+    This module contains the types for all different
+    packets that can be sent with a short header.
+
+    The remaining 5 bits of octet 0 include one of 32 packet types.
+
+    [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#short-packet-types)
+    """
+
+    @doc """
+    0x01 1 octet.
+    """
+    @spec one_octet() :: integer
+    def one_octet(), do: 1
+
+    @doc """
+    0x02 2 octet.
+    """
+    @spec two_octet() :: integer
+    def two_octet(), do: 2
+
+    @doc """
+    0x03 4 octet.
+    """
+    @spec four_octet() :: integer
+    def four_octet(), do: 3
+  end
 end

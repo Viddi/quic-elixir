@@ -47,4 +47,58 @@ defmodule QUIC.Header.Long do
 
   @enforce_keys [:type, :connection_id, :packet_number]
   defstruct [:type, :connection_id, :packet_number, :version, :payload]
+
+  defmodule Type do
+    @moduledoc """
+    This module contains the types for all different
+    packets that can be sent with a long header.
+
+    The remaining seven bits of octet 0 contain the packet type.
+    This field can indicate one of 128 packet types.
+
+    [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#long-packet-types)
+    """
+
+    @doc """
+    0x01 Version Negotiation packet.
+    [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-version)
+    """
+    @spec version_negotiation() :: integer
+    def version_negotiation(), do: 1
+
+    @doc """
+    0x02 Client Initial packet.
+    [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-client-initial)
+    """
+    @spec client_initial() :: integer
+    def client_initial(), do: 2
+
+    @doc """
+    0x03 Server Stateless Retry packet.
+    [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-server-stateless)
+    """
+    @spec server_stateless_retry() :: integer
+    def server_stateless_retry(), do: 3
+
+    @doc """
+    0x04 Server Cleartext packet.
+    [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-server-cleartext)
+    """
+    @spec server_cleartext() :: integer
+    def server_cleartext(), do: 4
+
+    @doc """
+    0x05 Client Cleartext packet.
+    [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-client-cleartext)
+    """
+    @spec client_cleartext() :: integer
+    def client_cleartext(), do: 5
+
+    @doc """
+    0x06 0-RTT Protected packet.
+    [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-protected)
+    """
+    @spec zero_rtt_protected() :: integer
+    def zero_rtt_protected(), do: 6
+  end
 end
