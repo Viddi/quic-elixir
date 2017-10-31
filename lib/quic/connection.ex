@@ -44,6 +44,7 @@ defmodule QUIC.Connection do
     - args: A keyword list [post: 1234, udp_opts: [:binary]]
     - opts: Options list passed to GenServer start/3 function.
   """
+  @spec start(list) :: pid | tuple
   @spec start(list, list) :: pid | tuple
   def start(args, opts \\ []) do
     GenServer.start(__MODULE__, args, opts)
@@ -57,6 +58,7 @@ defmodule QUIC.Connection do
     - args: A keyword list [post: 1234, udp_opts: [:binary]]
     - opts: Options list passed to GenServer start_link/3 function.
   """
+  @spec start_link(list) :: pid | tuple
   @spec start_link(list, list) :: pid | tuple
   def start_link(args, opts \\ []) do
     GenServer.start_link(__MODULE__, args, opts)

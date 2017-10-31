@@ -1,4 +1,4 @@
-defmodule QUIC.VersionNegotiation do
+defmodule QUIC.Packet.VersionNegotiation do
   @moduledoc """
   A Version Negotiation packet has long headers with a type value of 0x01
   and is sent only by servers. The Version Negotiation packet is a response
@@ -33,8 +33,8 @@ defmodule QUIC.VersionNegotiation do
   defstruct [:versions]
 
   @doc """
-  Parses out all of the QUIC versions from the Version Negotiation
-  packet and returns it in a form of list of integers.
+  Decodes the QUIC versions from the Version Negotiation
+  packet and returns it in a form of this module type.
 
   The supported versions are contained in 4 byte chunks beginning
   at the 9th zero-indexed byte and continuing to the end of the packet.
@@ -42,16 +42,38 @@ defmodule QUIC.VersionNegotiation do
   ## Parameters
 
     - packet: A bitstring representing a version negotiation packet.
+
+  ## Examples
+
+    iex> QUIC.Packet.VersionNegotiation.decode(<<0, 0, 0, 40>>)
+    %QUIC.Packet.VersionNegotiation{versions: [40]}
   """
-  @spec parse_versions(bitstring) :: list(integer)
-  def parse_versions(packet) when is_bitstring(packet) do
-    packet
-    |> :binary.bin_to_list()
-    |> Enum.chunk(4)
-    |> Enum.map(fn(x) -> :erlang.list_to_bitstring(x) end)
-    |> List.foldr([], fn(x, acc) ->
+  @spec decode(bitstring) :: __MODULE__.t
+  def decode(packet) when is_bitstring(packet) do
+    list =
+      packet
+      |> :binary.bin_to_list()
+      |> Enum.chunk(4)
+      |> Enum.map(fn(x) -> :erlang.list_to_bitstring(x) end)
+      |> List.foldr([], fn(x, acc) ->
         <<version::32>> = x
         [version | acc]
       end)
+
+    %__MODULE__{versions: list}
+  end
+
+  @doc """
+  Encodes the supported QUIC versions by this server in to bitstring form.
+
+  ## Examples
+
+    iex> QUIC.Packet.VersionNegotiation.encode()
+    <<0, 0, 0, 40>>
+  """
+  @spec encode() :: bitstring
+  def encode() do
+    QUIC.supported_versions()
+    |> Enum.reduce(<<>>, fn(x, acc) -> acc <> <<x::32>> end)
   end
 end
