@@ -3,7 +3,13 @@ defmodule QUIC.Packet do
   TODO
   """
 
-  alias QUIC.Packet.VersionNegotiation
+  ## Header dispatches
 
-  defdelegate version_negotiation(), to: VersionNegotiation, as: :encode
+  defdelegate header(type, connection_id, packet_number, version, payload),
+    to: QUIC.Header.Long, as: :encode
+
+  # Packet dispatches
+
+  defdelegate version_negotiation(),
+    to: QUIC.Packet.VersionNegotiation, as: :encode
 end

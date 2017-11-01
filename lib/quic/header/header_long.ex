@@ -101,4 +101,21 @@ defmodule QUIC.Header.Long do
     @spec zero_rtt_protected() :: integer
     def zero_rtt_protected(), do: 6
   end
+
+  @doc """
+  Encodes the long header packet in to a bitstring form.
+
+  ## Parameters
+
+    - type: A bitmask indicating types for a packet.
+    - connection_id: The 64 bit id for the connection.
+    - packet_number: The 64 bit unsigned packet number, which is
+    - used as a part of a cryptographic nonce for packet encryption.
+    - version: The QUIC version being used for this packet.
+    - payload: The packet payload.
+  """
+  @spec encode(integer, integer, integer, integer, bitstring) :: bitstring
+  def encode(type, connection_id, packet_number, version, payload) do
+    <<1::1, type::7, connection_id::64, packet_number::32, version::32>> <> payload
+  end
 end
