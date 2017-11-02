@@ -8,7 +8,7 @@ defmodule QUIC.Packet do
   defdelegate header(type, connection_id, packet_number, version, payload),
     to: QUIC.Header.Long, as: :encode
 
-  # Packet dispatches
+  ## Packet dispatches
 
   defdelegate version_negotiation(),
     to: QUIC.Packet.VersionNegotiation, as: :encode

@@ -63,42 +63,42 @@ defmodule QUIC.Header.Long do
     0x01 Version Negotiation packet.
     [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-version)
     """
-    @spec version_negotiation() :: integer
+    @spec version_negotiation() :: 1
     def version_negotiation(), do: 1
 
     @doc """
     0x02 Client Initial packet.
     [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-client-initial)
     """
-    @spec client_initial() :: integer
+    @spec client_initial() :: 2
     def client_initial(), do: 2
 
     @doc """
     0x03 Server Stateless Retry packet.
     [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-server-stateless)
     """
-    @spec server_stateless_retry() :: integer
+    @spec server_stateless_retry() :: 3
     def server_stateless_retry(), do: 3
 
     @doc """
     0x04 Server Cleartext packet.
     [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-server-cleartext)
     """
-    @spec server_cleartext() :: integer
+    @spec server_cleartext() :: 4
     def server_cleartext(), do: 4
 
     @doc """
     0x05 Client Cleartext packet.
     [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-client-cleartext)
     """
-    @spec client_cleartext() :: integer
+    @spec client_cleartext() :: 5
     def client_cleartext(), do: 5
 
     @doc """
     0x06 0-RTT Protected packet.
     [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#packet-protected)
     """
-    @spec zero_rtt_protected() :: integer
+    @spec zero_rtt_protected() :: 6
     def zero_rtt_protected(), do: 6
   end
 
@@ -114,7 +114,7 @@ defmodule QUIC.Header.Long do
     - version: The QUIC version being used for this packet.
     - payload: The packet payload.
   """
-  @spec encode(integer, integer, integer, integer, bitstring) :: bitstring
+  @spec encode(integer(), integer(), integer(), integer(), bitstring()) :: <<_::_*7>>
   def encode(type, connection_id, packet_number, version, payload) do
     <<1::1, type::7, connection_id::64, packet_number::32, version::32>> <> payload
   end

@@ -6,6 +6,6 @@ defmodule QUIC do
   @doc """
   A list of all supported QUIC versions.
   """
-  @spec supported_versions() :: [integer]
+  @spec supported_versions() :: [40, ...]
   def supported_versions(), do: [40]
 end

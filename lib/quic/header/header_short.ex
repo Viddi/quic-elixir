@@ -57,19 +57,19 @@ defmodule QUIC.Header.Short do
     @doc """
     0x01 1 octet.
     """
-    @spec one_octet() :: integer
+    @spec one_octet() :: 1
     def one_octet(), do: 1
 
     @doc """
     0x02 2 octet.
     """
-    @spec two_octet() :: integer
+    @spec two_octet() :: 2
     def two_octet(), do: 2
 
     @doc """
     0x03 4 octet.
     """
-    @spec four_octet() :: integer
+    @spec four_octet() :: 3
     def four_octet(), do: 3
   end
 end
