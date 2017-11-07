@@ -114,7 +114,7 @@ defmodule QUIC.Header.Long do
     - version: The QUIC version being used for this packet.
     - payload: The packet payload.
   """
-  @spec encode(integer(), integer(), integer(), integer(), bitstring()) :: <<_::_*7>>
+  @spec encode(integer(), integer(), integer(), integer(), bitstring()) :: <<_::_ * 7>>
   def encode(type, connection_id, packet_number, version, payload) do
     <<1::1, type::7, connection_id::64, packet_number::32, version::32>> <> payload
   end
