@@ -13,12 +13,3 @@ defmodule QUIC.Packet do
   defdelegate version_negotiation(),
     to: QUIC.Packet.VersionNegotiation, as: :encode
 end
-
-# defprotocol QUIC.Packet do
-#
-#   def header(struct)
-#
-#   def encode(struct)
-#
-#   def decode(packet)
-# end

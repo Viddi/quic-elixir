@@ -7,7 +7,7 @@ defprotocol QUIC.Type do
   @doc """
   Checks the type of the Packet for the given bitstring.
   """
-  @spec packet_type(bitstring()) :: atom()
+  @spec packet_type(bitstring) :: atom
   def packet_type(bitstring)
 end
 
