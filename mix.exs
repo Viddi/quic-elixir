@@ -10,7 +10,8 @@ defmodule QUIC.Mixfile do
       deps: deps(),
       dialyzer: [
         flags: [:error_handling, :race_conditions, :underspecs],
-        paths: ["_build/dev/lib/quic/ebin"]
+        paths: ["_build/dev/lib/quic/ebin"],
+        ignore_warnings: "dialyzer.ignore-warnings"
       ]
     ]
   end

@@ -4,10 +4,12 @@ defprotocol QUIC.Type do
   library deals with bitstrings structure a lot.
   """
 
+  @fallback_to_any true
+
   @doc """
   Checks the type of the Packet for the given bitstring.
   """
-  @spec packet_type(bitstring) :: {:long, integer} | {:short, integer}
+  @spec packet_type(bitstring) :: {:long, integer} | {:short, integer} | {:error, String.t}
   def packet_type(bitstring)
 end
 
@@ -37,8 +39,10 @@ defimpl QUIC.Type, for: Bitstring do
   def packet_type(<<0::1, _::1, _::1, 2::7, _::bitstring>>), do: {:short, Short.Type.two_octet()}
 
   def packet_type(<<0::1, _::1, _::1, 3::7, _::bitstring>>), do: {:short, Short.Type.four_octet()}
+end
 
-  ## Default case
+defimpl QUIC.Type, for: Any do
+
   ## TODO: Return a real error
 
   def packet_type(_), do: {:error, "No match for packet type"}
