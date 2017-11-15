@@ -1,6 +1,9 @@
 defmodule QUIC.Packet do
   @moduledoc """
-  TODO
+  This module is used as a facade that delegates to the proper
+  functions. This is only a convenience module that allows for
+  better naming and calling order for each function used to
+  encode, or decode a packet.
   """
 
   ## Header dispatches
