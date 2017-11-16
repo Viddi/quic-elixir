@@ -40,7 +40,7 @@ defimpl QUIC.Type, for: Bitstring do
 
   def packet_type(<<0::1, _::1, _::1, 2::7, _::bitstring>>), do: {Short, Short.Type.two_octet()}
 
-  def packet_type(<<0::1, _::1, _::1, 3::7, _::bitstring>>), do: {Shor, Short.Type.four_octet()}
+  def packet_type(<<0::1, _::1, _::1, 3::7, _::bitstring>>), do: {Short, Short.Type.four_octet()}
 end
 
 defimpl QUIC.Type, for: Any do
