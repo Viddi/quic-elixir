@@ -10,7 +10,7 @@
       check_for_updates: true,
       strict: false,
       checks: [
-        {Credo.Check.Readability.MaxLineLength, max_length: 100},
+        {Credo.Check.Readability.MaxLineLength, max_length: 110},
         {Credo.Check.Refactor.PipeChainStart, false},
         {Credo.Check.Design.TagTODO, false},
         {Credo.Check.Design.AliasUsage, false},

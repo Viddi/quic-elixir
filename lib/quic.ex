@@ -4,15 +4,13 @@ defmodule QUIC do
   """
 
   @doc """
-  Hello world.
+  A list of all supported QUIC versions.
 
   ## Examples
 
-      iex> QUIC.hello
-      :world
-
+    iex> QUIC.supported_versions()
+    [40]
   """
-  def hello do
-    :world
-  end
+  @spec supported_versions() :: [40, ...]
+  def supported_versions(), do: [40]
 end
