@@ -1,6 +1,6 @@
 defmodule QUIC.Frame.Type do
   @moduledoc """
-  TODO: Add docs
+  All QUIC Frame types.
 
   [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#frames)
   """
@@ -52,6 +52,28 @@ defmodule QUIC.Frame.Type do
   @spec ack() :: 14
   def ack(), do: 14
 
+  @doc """
+  The stream frame takes the form 0b00010XXX, i.e values
+  ranging from 0x10 - 0x17 depending on which bits are set.
+
+  Each bit represent a binary value:
+  FIN bit: 1
+  LEN bit: 2
+  OFF bit: 4
+
+  Based on the flags passed into this function, the base stream
+  type value will be mutated to include each of these flags.
+  That is, we start with 16, and then check each flag and add
+  each flag if they are present.
+
+  [Source](https://quicwg.github.io/base-drafts/draft-ietf-quic-transport.html#frame-stream)
+
+  ## Parameters
+
+    - fin: Whether the FIN bit is set or not.
+    - len: Whether the LEN bit is set or not.
+    - off: Whether the OFF bit is set or not.
+  """
   @spec stream(boolean, boolean, boolean) :: integer
   def stream(fin, len, off) do
     16
