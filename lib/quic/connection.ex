@@ -41,7 +41,7 @@ defmodule QUIC.Connection do
 
   ## Parameters
 
-    - args: A keyword list [post: 1234, udp_opts: [:binary]]
+    - args: A keyword list [port: 1234, udp_opts: [:binary]]
     - opts: Options list passed to GenServer start/3 function.
   """
   @spec start(list) :: {:error, term} | {:ok, pid}
@@ -55,7 +55,7 @@ defmodule QUIC.Connection do
 
   ## Parameters
 
-    - args: A keyword list [post: 1234, udp_opts: [:binary]]
+    - args: A keyword list [port: 1234, udp_opts: [:binary]]
     - opts: Options list passed to GenServer start_link/3 function.
   """
   @spec start_link(list) :: {:error, term} | {:ok, pid}
