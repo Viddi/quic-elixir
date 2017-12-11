@@ -16,22 +16,21 @@ defmodule QUIC do
 
   ## Socket API
 
-  @spec open(integer, list, list) :: pid
-  def open(port, udp_opts, opts) do
-    args = [
-      port: port,
-      udp_opts: udp_opts
-    ]
-
-    QUIC.Connection.start(args, opts)
+  @spec start() :: GenServer.on_start
+  @spec start(GenServer.options) :: GenServer.on_start
+  def start(opts \\ []) do
+    QUIC.Connection.start(opts)
   end
 
-  def open_link(port, udp_opts, opts) do
-    args = [
-      port: port,
-      udp_opts: udp_opts
-    ]
+  @spec start_link() :: GenServer.on_start
+  @spec start_link(GenServer.options) :: GenServer.on_start
+  def start_link(opts \\ []) do
+    QUIC.Connection.start_link(opts)
+  end
 
-    QUIC.Connection.start_link(args, opts)
+  # def listen(port, opts), do: QUIC.Connection.
+
+  def close(pid) do
+    QUIC.Connection.close(pid)
   end
 end
