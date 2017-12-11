@@ -74,7 +74,7 @@ defmodule QUIC.Frame.Type do
     - len: Whether the LEN bit is set or not.
     - off: Whether the OFF bit is set or not.
   """
-  @spec stream(boolean, boolean, boolean) :: integer
+  @spec stream(boolean, boolean, boolean) :: non_neg_integer
   def stream(fin, len, off) do
     16
     |> fin_bit(fin)
@@ -86,7 +86,7 @@ defmodule QUIC.Frame.Type do
   # is set to true, then 1 will be added to the existing value
   # of the stream type. If the fin bit is set to false, then the
   # value will be left unmodified.
-  @spec fin_bit(integer, boolean) :: integer
+  @spec fin_bit(non_neg_integer, boolean) :: non_neg_integer
   defp fin_bit(n, true), do: bor(n, 1)
   defp fin_bit(n, false), do: n
 
@@ -94,7 +94,7 @@ defmodule QUIC.Frame.Type do
   # is set to true, then 2 will be added to the existing value
   # of the stream type. If the len bit is set to false, then the
   # value will be left unmodified.
-  @spec fin_bit(integer, boolean) :: integer
+  @spec len_bit(non_neg_integer, boolean) :: non_neg_integer
   defp len_bit(n, true), do: bor(n, 2)
   defp len_bit(n, false), do: n
 
@@ -102,7 +102,7 @@ defmodule QUIC.Frame.Type do
   # is set to true, then 4 will be added to the existing value
   # of the stream type. If the off bit is set to false, then the
   # value will be left unmodified.
-  @spec fin_bit(integer, boolean) :: integer
+  @spec off_bit(non_neg_integer, boolean) :: non_neg_integer
   def off_bit(n, true), do: bor(n, 4)
   def off_bit(n, false), do: n
 end
