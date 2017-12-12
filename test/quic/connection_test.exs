@@ -23,6 +23,9 @@ defmodule QUIC.ConnectionTest do
     {:ok, pid} = QUIC.Connection.start_link()
     assert Process.alive?(pid)
 
+    {:ok, socket} = QUIC.Connection.listen(pid, 1337)
+    assert is_port(socket)
+
     # Trapping an exit since we're using start_link
     # and we don't want to take the test process down with us
     Process.flag(:trap_exit, true)

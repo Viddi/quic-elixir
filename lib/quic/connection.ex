@@ -100,7 +100,7 @@ defmodule QUIC.Connection do
 
   @doc false
   def handle_call(:close, _from, state) do
-    {:stop, :normal, :ok, state}
+    {:stop, if state.socket do :normal else :wtf end, :ok, state}
   end
 
   @doc false
@@ -110,9 +110,14 @@ defmodule QUIC.Connection do
   end
 
   @doc false
-  def terminate(_reason, state) do
-    :gen_udp.close(state.socket)
-    :ok
+  def terminate(reason, state) do
+    case reason do
+      :normal ->
+        :gen_udp.close(state.socket)
+        :ok
+      :wtf ->
+        :ok
+    end
   end
 
   ## Private functions
