@@ -24,8 +24,6 @@ defmodule QUIC.Connection do
     socket: port
   }
 
-  @type on_start :: {:ok, pid} | :ignore | {:error, {:already_started, pid} | term}
-
   defstruct [:socket]
 
   @doc false
@@ -70,9 +68,9 @@ defmodule QUIC.Connection do
     - opts: A list of options that will be passed to the udp socket.
   """
   @spec listen(pid, integer) :: {:ok, port} | {:error, atom}
-  @spec listen(pid, integer, Keyword.t) :: {:ok, port} | {:error, atom}
+  @spec listen(pid, integer, [any]) :: {:ok, port} | {:error, atom}
   def listen(pid, port, opts \\ []) do
-    open_socket(port, opts)
+    GenServer.call(pid, {:listen, port, opts})
   end
 
   @doc """
@@ -92,7 +90,12 @@ defmodule QUIC.Connection do
 
   @doc false
   def handle_call({:listen, port, opts}, _from, state) do
-    {:reply, :ok, state}
+    case open_socket(port, opts) do
+      {:ok, socket} ->
+        {:reply, {:ok, socket}, %{state | socket: socket}}
+      {:error, reason} ->
+        {:reply, {:error, reason}, state}
+    end
   end
 
   @doc false
@@ -116,8 +119,8 @@ defmodule QUIC.Connection do
 
   # Opens a socket with the given options (opts[:udp_opts]),
   # or the default udp options provided by this module.
-  @spec open_socket(port, Keyword.t) :: {:ok, port} | {:error, atom}
-  defp open_socket(port, opts) do
-    :gen_udp.open(port, if opts[:udp_opts] do opts[:udp_opts] else @gen_udp_opts end)
+  @spec open_socket(port, [any]) :: {:error, atom} | {:ok, port}
+  def open_socket(port, opts) do
+    :gen_udp.open(port, if List.first(opts) do opts else @gen_udp_opts end)
   end
 end
