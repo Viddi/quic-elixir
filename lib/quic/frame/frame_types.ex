@@ -7,50 +7,50 @@ defmodule QUIC.Frame.Type do
 
   use Bitwise
 
-  @spec padding() :: 0
-  def padding(), do: 0
+  @spec padding() :: 0x00
+  def padding(), do: 0x00
 
-  @spec rst_stream() :: 1
-  def rst_stream(), do: 1
+  @spec rst_stream() :: 0x01
+  def rst_stream(), do: 0x01
 
-  @spec connection_close() :: 2
-  def connection_close(), do: 2
+  @spec connection_close() :: 0x02
+  def connection_close(), do: 0x02
 
-  @spec application_close() :: 3
-  def application_close(), do: 3
+  @spec application_close() :: 0x03
+  def application_close(), do: 0x03
 
-  @spec max_data() :: 4
-  def max_data(), do: 4
+  @spec max_data() :: 0x04
+  def max_data(), do: 0x04
 
-  @spec max_stream_data() :: 5
-  def max_stream_data(), do: 5
+  @spec max_stream_data() :: 0x05
+  def max_stream_data(), do: 0x05
 
-  @spec max_stream_id() :: 6
-  def max_stream_id(), do: 6
+  @spec max_stream_id() :: 0x06
+  def max_stream_id(), do: 0x06
 
-  @spec ping() :: 7
-  def ping(), do: 7
+  @spec ping() :: 0x07
+  def ping(), do: 0x07
 
-  @spec blocked() :: 8
-  def blocked(), do: 8
+  @spec blocked() :: 0x08
+  def blocked(), do: 0x08
 
-  @spec stream_blocked() :: 9
-  def stream_blocked(), do: 9
+  @spec stream_blocked() :: 0x09
+  def stream_blocked(), do: 0x09
 
-  @spec stream_id_blocked() :: 10
-  def stream_id_blocked(), do: 10
+  @spec stream_id_blocked() :: 0x0a
+  def stream_id_blocked(), do: 0x0a
 
-  @spec new_connection_id() :: 11
-  def new_connection_id(), do: 11
+  @spec new_connection_id() :: 0x0b
+  def new_connection_id(), do: 0x0b
 
-  @spec stop_sending() :: 12
-  def stop_sending(), do: 12
+  @spec stop_sending() :: 0x0c
+  def stop_sending(), do: 0x0c
 
-  @spec pong() :: 13
-  def pong(), do: 13
+  @spec pong() :: 0x0d
+  def pong(), do: 0x0d
 
-  @spec ack() :: 14
-  def ack(), do: 14
+  @spec ack() :: 0x0e
+  def ack(), do: 0x0e
 
   @doc """
   The stream frame takes the form 0b00010XXX, i.e values
@@ -76,7 +76,7 @@ defmodule QUIC.Frame.Type do
   """
   @spec stream(boolean, boolean, boolean) :: non_neg_integer
   def stream(fin, len, off) do
-    16
+    0x10
     |> fin_bit(fin)
     |> len_bit(len)
     |> off_bit(off)
