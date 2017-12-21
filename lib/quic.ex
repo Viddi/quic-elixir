@@ -28,8 +28,12 @@ defmodule QUIC do
     QUIC.Connection.start_link(opts)
   end
 
-  # def listen(port, opts), do: QUIC.Connection.
+  @spec open(pid, integer, [any]) :: term
+  def open(pid, port, opts) do
+    QUIC.Connection.open(pid, port, opts)
+  end
 
+  @spec close(pid) :: tuple
   def close(pid) do
     QUIC.Connection.close(pid)
   end

@@ -58,19 +58,33 @@ defmodule QUIC.Connection do
   end
 
   @doc """
-  Opens the UDP socket on the given port. If successful,
-  the port returned from this function should be passed into
-  the accept/1 or accept/2 function.
+  Opens the UDP socket on the given port.
 
   ## Parameters
 
+    - pid: The process identifier for the connection.
     - port: The port which the socket will be created on.
     - opts: A list of options that will be passed to the udp socket.
   """
-  @spec listen(pid, integer) :: {:ok, port} | {:error, atom}
-  @spec listen(pid, integer, [any]) :: {:ok, port} | {:error, atom}
-  def listen(pid, port, opts \\ []) do
-    GenServer.call(pid, {:listen, port, opts})
+  @spec open(pid, integer) :: term
+  @spec open(pid, integer, [any]) :: term
+  def open(pid, port, opts \\ []) do
+    GenServer.call(pid, {:open, port, opts})
+  end
+
+  @doc """
+  Only being used for testing now.
+
+  ## Parameters
+
+    - pid: The process identifier for the connection.
+    - address: The recipient ip address.
+    - port: The port of the socket.
+    - payload: The payload to send.
+  """
+  @spec send(pid, {integer, integer, integer, integer}, integer, term) :: :ok
+  def send(pid, address, port, payload) do
+    GenServer.cast(pid, {:send, address, port, payload})
   end
 
   @doc """
@@ -89,7 +103,7 @@ defmodule QUIC.Connection do
   ## GenServer callbacks
 
   @doc false
-  def handle_call({:listen, port, opts}, _from, state) do
+  def handle_call({:open, port, opts}, _from, state) do
     case open_socket(port, opts) do
       {:ok, socket} ->
         {:reply, {:ok, socket}, %{state | socket: socket}}
@@ -100,7 +114,17 @@ defmodule QUIC.Connection do
 
   @doc false
   def handle_call(:close, _from, state) do
-    {:stop, if state.socket do :normal else :wtf end, :ok, state}
+    {:stop, :normal, :ok, state}
+  end
+
+  @doc false
+  def handle_cast({:send, address, port, packet}, _from, state) do
+    if state.socket do
+      :gen_udp.send(state.socket, address, port, packet)
+      {:noreply, state}
+    else
+      {:noreply, state}
+    end
   end
 
   @doc false
@@ -111,20 +135,19 @@ defmodule QUIC.Connection do
 
   @doc false
   def terminate(reason, state) do
-    case reason do
-      :normal ->
-        :gen_udp.close(state.socket)
-        :ok
-      :wtf ->
-        :ok
+    Logger.info("Closing connection: #{inspect(reason)}")
+    if state.socket do
+      :gen_udp.close(state.socket)
     end
+
+    :ok
   end
 
   ## Private functions
 
   # Opens a socket with the given options (opts[:udp_opts]),
   # or the default udp options provided by this module.
-  @spec open_socket(port, [any]) :: {:error, atom} | {:ok, port}
+  @spec open_socket(integer, [any]) :: {:error, atom} | {:ok, port}
   def open_socket(port, opts) do
     :gen_udp.open(port, if List.first(opts) do opts else @gen_udp_opts end)
   end

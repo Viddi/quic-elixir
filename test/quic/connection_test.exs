@@ -7,10 +7,10 @@ defmodule QUIC.ConnectionTest do
     {:ok, pid} = QUIC.Connection.start()
     assert Process.alive?(pid)
 
-    {:ok, socket} = QUIC.Connection.listen(pid, 1337)
+    {:ok, socket} = QUIC.Connection.open(pid, 1337)
     assert is_port(socket)
 
-    assert QUIC.Connection.listen(pid, 1337) == {:error, :eaddrinuse}
+    assert QUIC.Connection.open(pid, 1337) == {:error, :eaddrinuse}
     assert QUIC.Connection.close(pid) == :ok
 
     # Give GenServer some time to exit
@@ -23,7 +23,7 @@ defmodule QUIC.ConnectionTest do
     {:ok, pid} = QUIC.Connection.start_link()
     assert Process.alive?(pid)
 
-    {:ok, socket} = QUIC.Connection.listen(pid, 1337)
+    {:ok, socket} = QUIC.Connection.open(pid, 1337)
     assert is_port(socket)
 
     # Trapping an exit since we're using start_link
