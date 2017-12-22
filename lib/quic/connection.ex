@@ -27,13 +27,8 @@ defmodule QUIC.Connection do
   defstruct [:socket]
 
   @doc false
-  def init(args) do
-    case open_socket(args) do
-      {:ok, socket} ->
-        {:ok, %__MODULE__{socket: socket}}
-      {:error, reason} ->
-        {:stop, reason}
-    end
+  def init(_args) do
+    {:ok, %__MODULE__{}}
   end
 
   @doc """
@@ -41,13 +36,12 @@ defmodule QUIC.Connection do
 
   ## Parameters
 
-    - args: A keyword list [post: 1234, udp_opts: [:binary]]
     - opts: Options list passed to GenServer start/3 function.
   """
-  @spec start(list) :: {:error, term} | {:ok, pid}
-  @spec start(list, list) :: {:error, term} | {:ok, pid}
-  def start(args, opts \\ []) do
-    GenServer.start(__MODULE__, args, opts)
+  @spec start() :: GenServer.on_start
+  @spec start(GenServer.options) :: GenServer.on_start
+  def start(opts \\ []) do
+    GenServer.start(__MODULE__, [], opts)
   end
 
   @doc """
@@ -55,13 +49,42 @@ defmodule QUIC.Connection do
 
   ## Parameters
 
-    - args: A keyword list [post: 1234, udp_opts: [:binary]]
     - opts: Options list passed to GenServer start_link/3 function.
   """
-  @spec start_link(list) :: {:error, term} | {:ok, pid}
-  @spec start_link(list, list) :: {:error, term} | {:ok, pid}
-  def start_link(args, opts \\ []) do
-    GenServer.start_link(__MODULE__, args, opts)
+  @spec start_link() :: GenServer.on_start
+  @spec start_link(GenServer.options) :: GenServer.on_start
+  def start_link(opts \\ []) do
+    GenServer.start_link(__MODULE__, [], opts)
+  end
+
+  @doc """
+  Opens the UDP socket on the given port.
+
+  ## Parameters
+
+    - pid: The process identifier for the connection.
+    - port: The port which the socket will be created on.
+    - opts: A list of options that will be passed to the udp socket.
+  """
+  @spec open(pid, integer) :: term
+  @spec open(pid, integer, [any]) :: term
+  def open(pid, port, opts \\ []) do
+    GenServer.call(pid, {:open, port, opts})
+  end
+
+  @doc """
+  Only being used for testing now.
+
+  ## Parameters
+
+    - pid: The process identifier for the connection.
+    - address: The recipient ip address.
+    - port: The port of the socket.
+    - payload: The payload to send.
+  """
+  @spec send(pid, {integer, integer, integer, integer}, integer, term) :: :ok
+  def send(pid, address, port, payload) do
+    GenServer.cast(pid, {:send, address, port, payload})
   end
 
   @doc """
@@ -80,9 +103,13 @@ defmodule QUIC.Connection do
   ## GenServer callbacks
 
   @doc false
-  def handle_info({:udp, _socket, ip, port, packet}, state) do
-    Logger.info("Received udp packet: #{inspect(packet)} from #{inspect(ip)}:#{inspect(port)}")
-    {:noreply, state}
+  def handle_call({:open, port, opts}, _from, state) do
+    case open_socket(port, opts) do
+      {:ok, socket} ->
+        {:reply, {:ok, socket}, %{state | socket: socket}}
+      {:error, reason} ->
+        {:reply, {:error, reason}, state}
+    end
   end
 
   @doc false
@@ -91,8 +118,28 @@ defmodule QUIC.Connection do
   end
 
   @doc false
-  def terminate(_reason, state) do
-    :gen_udp.close(state.socket)
+  def handle_cast({:send, address, port, packet}, _from, state) do
+    if state.socket do
+      :gen_udp.send(state.socket, address, port, packet)
+      {:noreply, state}
+    else
+      {:noreply, state}
+    end
+  end
+
+  @doc false
+  def handle_info({:udp, _socket, ip, port, packet}, state) do
+    Logger.info("Received udp packet: #{inspect(packet)} from #{inspect(ip)}:#{inspect(port)}")
+    {:noreply, state}
+  end
+
+  @doc false
+  def terminate(reason, state) do
+    Logger.info("Closing connection: #{inspect(reason)}")
+    if state.socket do
+      :gen_udp.close(state.socket)
+    end
+
     :ok
   end
 
@@ -100,8 +147,8 @@ defmodule QUIC.Connection do
 
   # Opens a socket with the given options (opts[:udp_opts]),
   # or the default udp options provided by this module.
-  @spec open_socket(list) :: tuple
-  defp open_socket(opts) do
-    :gen_udp.open(opts[:port], if opts[:udp_opts] do opts[:udp_opts] else @gen_udp_opts end)
+  @spec open_socket(integer, [any]) :: {:error, atom} | {:ok, port}
+  def open_socket(port, opts) do
+    :gen_udp.open(port, if List.first(opts) do opts else @gen_udp_opts end)
   end
 end

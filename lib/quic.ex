@@ -13,4 +13,28 @@ defmodule QUIC do
   """
   @spec supported_versions() :: [40, ...]
   def supported_versions(), do: [40]
+
+  ## Socket API
+
+  @spec start() :: GenServer.on_start
+  @spec start(GenServer.options) :: GenServer.on_start
+  def start(opts \\ []) do
+    QUIC.Connection.start(opts)
+  end
+
+  @spec start_link() :: GenServer.on_start
+  @spec start_link(GenServer.options) :: GenServer.on_start
+  def start_link(opts \\ []) do
+    QUIC.Connection.start_link(opts)
+  end
+
+  @spec open(pid, integer, [any]) :: term
+  def open(pid, port, opts) do
+    QUIC.Connection.open(pid, port, opts)
+  end
+
+  @spec close(pid) :: tuple
+  def close(pid) do
+    QUIC.Connection.close(pid)
+  end
 end
