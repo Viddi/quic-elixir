@@ -24,7 +24,7 @@ defmodule QUIC.Frame.TypeTest do
     ## FIN and OFF bits set
     assert Type.stream(true, false, true) == 0x15
 
-    ## LEN and OFF bit set
+    ## LEN and OFF bits set
     assert Type.stream(false, true, true) == 0x16
 
     ## FIN, LEN and OFF bits set

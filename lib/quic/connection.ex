@@ -121,10 +121,8 @@ defmodule QUIC.Connection do
   def handle_cast({:send, address, port, packet}, _from, state) do
     if state.socket do
       :gen_udp.send(state.socket, address, port, packet)
-      {:noreply, state}
-    else
-      {:noreply, state}
     end
+    {:noreply, state}
   end
 
   @doc false
@@ -139,7 +137,6 @@ defmodule QUIC.Connection do
     if state.socket do
       :gen_udp.close(state.socket)
     end
-
     :ok
   end
 
@@ -148,7 +145,7 @@ defmodule QUIC.Connection do
   # Opens a socket with the given options (opts[:udp_opts]),
   # or the default udp options provided by this module.
   @spec open_socket(integer, [any]) :: {:error, atom} | {:ok, port}
-  def open_socket(port, opts) do
+  defp open_socket(port, opts) do
     :gen_udp.open(port, if List.first(opts) do opts else @gen_udp_opts end)
   end
 end

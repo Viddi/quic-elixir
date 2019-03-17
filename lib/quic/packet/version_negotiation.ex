@@ -53,7 +53,7 @@ defmodule QUIC.Packet.VersionNegotiation do
     list =
       packet
       |> :binary.bin_to_list()
-      |> Enum.chunk(4)
+      |> Enum.chunk_every(4)
       |> Enum.map(fn(x) -> :erlang.list_to_bitstring(x) end)
       |> List.foldr([], fn(x, acc) ->
         <<version::32>> = x

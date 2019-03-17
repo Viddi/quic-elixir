@@ -5,7 +5,7 @@ defmodule QUIC.Mixfile do
     [
       app: :quic,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.8",
       start_permanent: Mix.env == :prod,
       deps: deps(),
       dialyzer: [
@@ -26,9 +26,9 @@ defmodule QUIC.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_doc, "~> 0.18.1"},
+      {:ex_doc, "~> 0.19.3"},
       {:dialyxir, "~> 0.5.1", only: [:dev], runtime: false},
-      {:credo, "~> 0.8.8", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.0.3", only: [:dev, :test], runtime: false}
     ]
   end
 end

@@ -103,6 +103,6 @@ defmodule QUIC.Frame.Type do
   # of the stream type. If the off bit is set to false, then the
   # value will be left unmodified.
   @spec off_bit(non_neg_integer, boolean) :: non_neg_integer
-  def off_bit(n, true), do: bor(n, 4)
-  def off_bit(n, false), do: n
+  defp off_bit(n, true), do: bor(n, 4)
+  defp off_bit(n, false), do: n
 end
